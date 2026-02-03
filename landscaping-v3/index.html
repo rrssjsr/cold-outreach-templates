@@ -1314,23 +1314,27 @@
             });
         });
         
-        // Service cards
-        gsap.from('.service-card', {
-            y: 60,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            scrollTrigger: { trigger: '.services-grid', start: 'top 80%' }
-        });
-        
-        // Portfolio items
-        gsap.from('.portfolio-item', {
-            y: 60,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            scrollTrigger: { trigger: '.portfolio-grid', start: 'top 80%' }
-        });
+        // Service cards - immediate on mobile, animated on desktop
+        if (window.innerWidth > 768) {
+            gsap.from('.service-card', {
+                y: 60,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                scrollTrigger: { trigger: '.services-grid', start: 'top 90%' }
+            });
+            gsap.from('.portfolio-item', {
+                y: 60,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                scrollTrigger: { trigger: '.portfolio-grid', start: 'top 90%' }
+            });
+        } else {
+            // Mobile: just fade in quickly without scroll trigger
+            gsap.from('.service-card', { opacity: 0, duration: 0.3, stagger: 0.05 });
+            gsap.from('.portfolio-item', { opacity: 0, duration: 0.3, stagger: 0.05 });
+        }
         
         // CTA
         gsap.from('.cta h2, .cta p, .cta-btn', {
