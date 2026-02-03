@@ -500,6 +500,8 @@
             overflow: hidden;
             transition: all 0.4s ease;
             border: 1px solid #eee;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         .service-card::before {
@@ -1314,15 +1316,8 @@
             });
         });
         
-        // Service cards - immediate on mobile, animated on desktop
+        // Portfolio items animation only (service cards visible by default now)
         if (window.innerWidth > 768) {
-            gsap.from('.service-card', {
-                y: 60,
-                opacity: 0,
-                duration: 0.6,
-                stagger: 0.1,
-                scrollTrigger: { trigger: '.services-grid', start: 'top 90%' }
-            });
             gsap.from('.portfolio-item', {
                 y: 60,
                 opacity: 0,
@@ -1330,10 +1325,6 @@
                 stagger: 0.1,
                 scrollTrigger: { trigger: '.portfolio-grid', start: 'top 90%' }
             });
-        } else {
-            // Mobile: just fade in quickly without scroll trigger
-            gsap.from('.service-card', { opacity: 0, duration: 0.3, stagger: 0.05 });
-            gsap.from('.portfolio-item', { opacity: 0, duration: 0.3, stagger: 0.05 });
         }
         
         // CTA
