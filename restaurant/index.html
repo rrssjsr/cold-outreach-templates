@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{BUSINESS_NAME}} - Fine Dining</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --black: #1a1a1a;
+            --white: #fff;
+            --gold: #c9a962;
+            --cream: #f9f7f4;
+            --dark-green: #2c3e2d;
+            --light: #f5f3ef;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--black);
+            overflow-x: hidden;
+        }
+        
+        /* Loader */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .loader-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--gold);
+            letter-spacing: 0.2em;
+            overflow: hidden;
+        }
+        
+        .loader-text span { display: inline-block; transform: translateY(100%); }
+        
+        .loader-line {
+            width: 100px;
+            height: 1px;
+            background: var(--gold);
+            margin-top: 2rem;
+            transform: scaleX(0);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.5s ease;
+        }
+        
+        nav.scrolled {
+            background: rgba(26,26,26,0.98);
+            padding: 1rem 5%;
+        }
+        
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+        }
+        
+        .logo span { color: var(--gold); }
+        
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after { width: 100%; }
+        
+        .nav-cta {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: 1px solid var(--gold);
+            padding: 0.8rem 1.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-cta:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            background: var(--black);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 5% 5rem 10%;
+            color: var(--white);
+        }
+        
+        .hero-tag {
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .hero-tag::before {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+        }
+        
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-title em {
+            font-style: italic;
+            color: var(--gold);
+        }
+        
+        .hero-desc {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: rgba(255,255,255,0.7);
+            max-width: 450px;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .btn-gold {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--black);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gold:hover {
+            background: #b8934f;
+            transform: translateY(-3px);
+        }
+        
+        .btn-outline {
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        /* Hero Images */
+        .hero-images {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+            padding: 6rem 5% 3rem 2rem;
+        }
+        
+        .hero-img {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .hero-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+        
+        .hero-img:hover img { transform: scale(1.1); }
+        
+        .hero-img:nth-child(1) { grid-row: span 2; }
+        
+        .hero-img-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: var(--white);
+        }
+        
+        .hero-img-overlay h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+        
+        .hero-img-overlay span {
+            font-size: 0.75rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 10rem 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .about-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            position: relative;
+        }
+        
+        .about-img {
+            overflow: hidden;
+        }
+        
+        .about-img:first-child {
+            grid-row: span 2;
+            margin-top: 3rem;
+        }
+        
+        .about-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .about-badge {
+            position: absolute;
+            bottom: 2rem;
+            right: -2rem;
+            background: var(--gold);
+            color: var(--black);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+        
+        .about-badge h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            line-height: 1;
+        }
+        
+        .about-badge span {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        
+        .about-content h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: var(--dark-green);
+        }
+        
+        .about-content h2 em { color: var(--gold); }
+        
+        .section-tag {
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .section-tag::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--gold);
+        }
+        
+        .about-content p {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .about-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .about-feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--cream);
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .about-feature-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--gold);
+        }
+        
+        .about-feature span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark-green);
+        }
+        
+        /* Menu Preview */
+        .menu-preview {
+            padding: 8rem 5%;
+            background: var(--dark-green);
+            color: var(--white);
+        }
+        
+        .menu-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 5rem;
+        }
+        
+        .menu-header .section-tag { justify-content: center; }
+        
+        .menu-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 400;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .menu-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .menu-card:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-10px);
+        }
+        
+        .menu-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+        }
+        
+        .menu-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-card p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .menu-card-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--gold);
+        }
+        
+        /* CTA */
+        .cta {
+            padding: 10rem 5%;
+            background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80') center/cover fixed;
+            position: relative;
+            text-align: center;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+        }
+        
+        .cta > * { position: relative; z-index: 1; }
+        
+        .cta h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+        
+        .cta h2 em { color: var(--gold); font-style: italic; }
+        
+        .cta p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+        }
+        
+        /* Contact */
+        .contact {
+            padding: 8rem 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-info h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 3vw, 2.8rem);
+            font-weight: 400;
+            color: var(--dark-green);
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-info > p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .contact-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .contact-icon svg { width: 20px; height: 20px; stroke: var(--black); }
+        
+        .contact-text h4 {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+        
+        .contact-text p, .contact-text a {
+            font-size: 1.1rem;
+            color: var(--dark-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-text a:hover { color: var(--gold); }
+        
+        .contact-form {
+            background: var(--white);
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+        
+        .contact-form h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            color: var(--dark-green);
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: var(--cream);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        .form-group textarea { min-height: 100px; resize: none; }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--dark-green);
+            color: var(--white);
+            border: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .form-btn:hover { background: var(--gold); color: var(--black); }
+        
+        /* Footer */
+        footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 4rem 5% 2rem;
+        }
+        
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+        
+        .footer-logo span { color: var(--gold); }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover { color: var(--gold); }
+        
+        .footer-bottom {
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero, .about, .contact { grid-template-columns: 1fr; }
+            .hero-content { order: 2; padding: 4rem 5%; text-align: center; }
+            .hero-images { order: 1; padding: 6rem 5% 0; height: 400px; }
+            .hero-tag { justify-content: center; }
+            .hero-tag::before { display: none; }
+            .hero-btns { justify-content: center; }
+            .about-images { margin-bottom: 3rem; }
+            .menu-grid { grid-template-columns: 1fr; max-width: 400px; }
+        }
+        
+        @media (max-width: 768px) {
+            nav { padding: 1rem 5%; }
+            .nav-links { display: none; }
+            .hero-images { grid-template-columns: 1fr; height: auto; }
+            .hero-img:nth-child(1) { grid-row: auto; }
+            .about-features { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader">
+        <div class="loader-text"><span>{{BUSINESS_NAME}}</span></div>
+        <div class="loader-line"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">{{BUSINESS_NAME}}<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="tel:{{PHONE}}" class="nav-cta">Reservations</a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">Welcome to {{BUSINESS_NAME}}</span>
+            <h1 class="hero-title">Where Every Meal Becomes a <em>Memory</em></h1>
+            <p class="hero-desc">Experience culinary excellence in {{CITY}}. Fresh ingredients, masterful preparation, and an atmosphere that makes every visit special.</p>
+            <div class="hero-btns">
+                <a href="tel:{{PHONE}}" class="btn-gold">Reserve a Table</a>
+                <a href="#menu" class="btn-outline">View Menu</a>
+            </div>
+        </div>
+        <div class="hero-images">
+            <div class="hero-img">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Dish">
+                <div class="hero-img-overlay">
+                    <h4>Signature Dishes</h4>
+                    <span>Chef's Selection</span>
+                </div>
+            </div>
+            <div class="hero-img">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Food">
+            </div>
+            <div class="hero-img">
+                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" alt="Cuisine">
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="about-images">
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&q=80" alt="Interior">
+            </div>
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=80" alt="Chef">
+            </div>
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1560717789-0ac7c58ac90a?w=400&q=80" alt="Dining">
+            </div>
+            <div class="about-badge">
+                <h4>{{YEARS}}+</h4>
+                <span>Years of Excellence</span>
+            </div>
+        </div>
+        <div class="about-content">
+            <span class="section-tag">Our Story</span>
+            <h2>A Passion for <em>Exceptional</em> Cuisine</h2>
+            <p>Since {{SINCE_YEAR}}, {{BUSINESS_NAME}} has been serving {{CITY}} with dedication to quality, flavor, and hospitality. Our kitchen crafts each dish with care, using locally-sourced ingredients and time-honored techniques.</p>
+            <p>Whether you're celebrating a special occasion or enjoying a casual dinner, we create an experience that keeps you coming back.</p>
+            <div class="about-features">
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <span>Fresh Ingredients</span>
+                </div>
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span>Award Winning</span>
+                </div>
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <span>Family Owned</span>
+                </div>
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <span>Private Events</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Preview -->
+    <section class="menu-preview" id="menu">
+        <div class="menu-header">
+            <span class="section-tag">Culinary Delights</span>
+            <h2>Featured Menu</h2>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80" alt="Dish" class="menu-card-img">
+                <h3>Garden Fresh Salad</h3>
+                <p>Mixed greens, seasonal vegetables, house-made vinaigrette</p>
+                <span class="menu-card-price">$14</span>
+            </div>
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400&q=80" alt="Dish" class="menu-card-img">
+                <h3>Grilled Salmon</h3>
+                <p>Atlantic salmon, lemon herb butter, seasonal vegetables</p>
+                <span class="menu-card-price">$32</span>
+            </div>
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" alt="Dish" class="menu-card-img">
+                <h3>Prime Ribeye</h3>
+                <p>12oz prime cut, truffle mashed potatoes, red wine reduction</p>
+                <span class="menu-card-price">$48</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <span class="section-tag" style="justify-content: center; color: var(--gold);">Book Your Experience</span>
+        <h2>Reserve Your Table <em>Today</em></h2>
+        <p>Join us for an unforgettable dining experience. Call now to secure your reservation.</p>
+        <a href="tel:{{PHONE}}" class="btn-gold">Call {{PHONE_DISPLAY}}</a>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="contact-info">
+            <span class="section-tag">Get in Touch</span>
+            <h2>Visit Us</h2>
+            <p>We'd love to see you. Stop by for lunch, dinner, or a special celebration.</p>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div class="contact-text">
+                    <h4>Reservations</h4>
+                    <a href="tel:{{PHONE}}">{{PHONE_DISPLAY}}</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div class="contact-text">
+                    <h4>Location</h4>
+                    <p>{{CITY}}, {{STATE}}</p>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="contact-text">
+                    <h4>Hours</h4>
+                    <p>Tue-Sun: 5pm - 10pm</p>
+                </div>
+            </div>
+        </div>
+        <form class="contact-form">
+            <h3>Make a Reservation</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" placeholder="Your phone" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Guests</label>
+                    <select>
+                        <option>2 Guests</option>
+                        <option>3 Guests</option>
+                        <option>4 Guests</option>
+                        <option>5+ Guests</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Special Requests</label>
+                <textarea placeholder="Any special requests..."></textarea>
+            </div>
+            <button type="submit" class="form-btn">Request Reservation</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-top">
+            <a href="#" class="footer-logo">{{BUSINESS_NAME}}<span>.</span></a>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#menu">Menu</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 {{BUSINESS_NAME}}. All rights reserved. | {{CITY}}, {{STATE}}</p>
+        </div>
+    </footer>
+
+    <script>
+        // URL Params
+        const params = new URLSearchParams(window.location.search);
+        const replacements = {
+            '{{BUSINESS_NAME}}': params.get('name') || 'La Maison',
+            '{{PHONE}}': params.get('phone') || '+18065551234',
+            '{{PHONE_DISPLAY}}': params.get('phone_display') || '(806) 555-1234',
+            '{{CITY}}': params.get('city') || 'Austin',
+            '{{STATE}}': params.get('state') || 'Texas',
+            '{{YEARS}}': params.get('years') || '15',
+            '{{SINCE_YEAR}}': params.get('since') || '2009'
+        };
+        
+        document.body.innerHTML = document.body.innerHTML.replace(/\{\{[A-Z_]+\}\}/g, m => replacements[m] || m);
+        document.title = document.title.replace(/\{\{[A-Z_]+\}\}/g, m => replacements[m] || m);
+        
+        // GSAP
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Loader
+        const loaderTl = gsap.timeline();
+        loaderTl
+            .to('.loader-text span', { y: 0, duration: 1, ease: 'power3.out' })
+            .to('.loader-line', { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, '-=0.5')
+            .to('.loader', { y: '-100%', duration: 1, ease: 'power3.inOut', delay: 0.3 })
+            .from('.hero-tag', { y: 30, opacity: 0, duration: 0.6 }, '-=0.5')
+            .from('.hero-title', { y: 50, opacity: 0, duration: 0.8 }, '-=0.3')
+            .from('.hero-desc', { y: 30, opacity: 0, duration: 0.6 }, '-=0.4')
+            .from('.hero-btns', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
+            .from('.hero-img', { scale: 0.9, opacity: 0, duration: 0.8, stagger: 0.15 }, '-=0.5');
+        
+        // Nav scroll
+        window.addEventListener('scroll', () => {
+            document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 100);
+        });
+        
+        // About section
+        gsap.from('.about-images', {
+            x: -80, opacity: 0, duration: 1,
+            scrollTrigger: { trigger: '.about', start: 'top 70%' }
+        });
+        
+        gsap.from('.about-content', {
+            x: 80, opacity: 0, duration: 1,
+            scrollTrigger: { trigger: '.about', start: 'top 70%' }
+        });
+        
+        // Menu cards
+        gsap.from('.menu-card', {
+            y: 60, opacity: 0, duration: 0.6, stagger: 0.15,
+            scrollTrigger: { trigger: '.menu-grid', start: 'top 80%' }
+        });
+        
+        // CTA
+        gsap.from('.cta h2, .cta p, .cta .btn-gold', {
+            y: 40, opacity: 0, duration: 0.6, stagger: 0.15,
+            scrollTrigger: { trigger: '.cta', start: 'top 70%' }
+        });
+        
+        // Contact
+        gsap.from('.contact-info, .contact-form', {
+            y: 50, opacity: 0, duration: 0.8, stagger: 0.2,
+            scrollTrigger: { trigger: '.contact', start: 'top 70%' }
+        });
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
